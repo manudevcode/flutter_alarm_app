@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:ui_clock_and_alarm/shapes_painter.dart';
+import 'package:ui_clock_and_alarm/widgets/alarm_item.dart';
 
 void main() => runApp(AlarmApp());
 
@@ -11,15 +12,30 @@ class AlarmApp extends StatefulWidget {
   _AlarmAppState createState() => _AlarmAppState();
 }
 
-class _AlarmAppState extends State<AlarmApp> {
+class _AlarmAppState extends State<AlarmApp> with SingleTickerProviderStateMixin{
 
   String _timeString;
+  TabController _tabController;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 4, vsync: this, initialIndex: 0);
+    _tabController.addListener(_handleTabIndex);
+
     _timeString = _formatDateTime(DateTime.now());
-    Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+   Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+  }
+
+   @override
+  void dispose() {
+    _tabController.removeListener(_handleTabIndex);
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void _handleTabIndex() {
+    setState(() {});
   }
 
   void _getTime() {
@@ -43,8 +59,9 @@ class _AlarmAppState extends State<AlarmApp> {
         length: 4,
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Color(0xff354569),
+            backgroundColor: Color(0xff1B2C57),
             bottom: TabBar(
+              controller: _tabController,
               indicatorColor: Color(0xff65D1BA),
               indicatorWeight: 4.0,
               tabs: [
@@ -56,8 +73,9 @@ class _AlarmAppState extends State<AlarmApp> {
             ),
           ),
           body: Container(
-            color: Color(0xff354569),
+            color: Color(0xff1B2C57),
             child: TabBarView(
+              controller: _tabController,
               children: [
                 Container(
                   child: Column(
@@ -81,42 +99,10 @@ class _AlarmAppState extends State<AlarmApp> {
                 Container(
                   child: ListView(
                     children: <Widget>[  
-                      Padding(
-                        padding: EdgeInsets.all(20.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(_timeString.toString(), style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 50.0,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'SourceSansPro'
-                                ),),
-                                Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: EdgeInsets.all(4.0),
-                                      child: Text('Sun', style: TextStyle(
-                                        
-                                      ),),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                            CupertinoSwitch(
-                              value: true,
-                              onChanged: (bool val) {
-                                print(val);
-                              },                    
-                              activeColor: Color(0xff65D1BA),
-                            )
-                          ],
-                        ),
-                      )
+                      alarmItem(_timeString, true),
+                      alarmItem(_timeString, true),
+                      alarmItem(_timeString, false),
+                      alarmItem(_timeString, false),
                     ],
                   ),
                 ),
@@ -124,9 +110,27 @@ class _AlarmAppState extends State<AlarmApp> {
                 Icon(Icons.timer),
               ],
             ),
-          )
+          ),
+          floatingActionButton: _bottomButtons(),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         ),
       ),
     );
+  }
+
+  Widget _bottomButtons() {
+    return _tabController.index == 1
+      ?FloatingActionButton(
+        shape: StadiumBorder(),
+        onPressed: (){
+
+        },
+        backgroundColor: Color(0xff65D1BA),
+        child: Icon(
+          Icons.edit,
+          size: 20.0,
+        ),
+      )
+      :null;
   }
 }
