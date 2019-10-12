@@ -23,7 +23,7 @@ class ShapesPainter extends CustomPainter {
     final paint = Paint();
     var center = Offset(size.width / 2, size.height / 2);
     paint.color = Colors.white;
-    canvas.drawCircle(center, size.width / 3, paint);
+    canvas.drawCircle(center, (size.width / 3) - 5, paint);
     paint.strokeCap = StrokeCap.round;
 
     /**
@@ -65,7 +65,6 @@ class ShapesPainter extends CustomPainter {
     final p1 = center;
     double hourseDegree = 360 / 12 * (now.hour - 12);
     hourseDegree += 30 / 60 * now.minute;
-    print(hourseDegree);
     // x = cx + r * cos(a)
     x = (size.width / 2) + (size.width / 3 - 60) * cos(Vector.radians(hourseDegree));
     // y = cy + r * sin(a)
