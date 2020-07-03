@@ -54,18 +54,23 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
     return DefaultTabController(
         length: 4,
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            bottom: TabBar(
-              controller: _tabController,
-              indicatorColor: Theme.of(context).accentColor,
-              indicatorWeight: 4.0,
-              tabs: [
-                Tab(icon: Icon(Icons.access_time), text: 'Clock',),
-                Tab(icon: Icon(Icons.alarm), text: 'Alarm'),
-                Tab(icon: Icon(Icons.hourglass_empty), text: 'Timer'),
-                Tab(icon: Icon(Icons.timer), text: 'Stopwatch'),
-              ],
+          
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(100.0),
+            child: Container(
+              padding: EdgeInsets.only(top:30),
+              color: Theme.of(context).primaryColor,
+              child: TabBar(
+                controller: _tabController,
+                indicatorColor: Theme.of(context).accentColor,
+                indicatorWeight: 4.0,
+                tabs: [
+                  Tab(icon: Icon(Icons.access_time), text: 'Clock',),
+                  Tab(icon: Icon(Icons.alarm), text: 'Alarm'),
+                  Tab(icon: Icon(Icons.hourglass_empty), text: 'Timer'),
+                  Tab(icon: Icon(Icons.timer), text: 'Stopwatch'),
+                ],
+              ),
             ),
           ),
           body: Container(
